@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git Literacy for Product Managers Using Claude Code</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #4b5563;
+      --color-heading: #111827;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-accent-light: #eff6ff;
+      --color-border: #e5e7eb;
+      --color-border-light: #f3f4f6;
+      --color-sidebar-bg: #f9fafb;
+      --color-code-bg: #f3f4f6;
+      --color-success: #059669;
+      --color-check-bg: #fefce8;
+      --color-check-border: #fde68a;
+      --color-table-header-bg: #f9fafb;
+      --color-table-stripe: #f9fafb;
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-mono: 'SF Mono', ui-monospace, Consolas, monospace;
+      --max-content-width: 720px;
+      --sidebar-width: 260px;
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 3rem;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --line-height: 1.7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: var(--line-height);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: var(--sidebar-width);
+      background: var(--color-sidebar-bg);
+      border-right: 1px solid var(--color-border);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .sidebar-header h1 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-heading);
+      line-height: 1.3;
+    }
+
+    .sidebar-header .subtitle {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      margin-top: var(--spacing-xs);
+    }
+
+    #module-nav {
+      list-style: none;
+      padding: var(--spacing-sm) 0;
+      flex: 1;
+    }
+
+    #module-nav li a {
+      display: flex;
+      align-items: baseline;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      text-decoration: none;
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    #module-nav li a:hover {
+      background: var(--color-border-light);
+      color: var(--color-text);
+    }
+
+    #module-nav li a.active {
+      color: var(--color-accent);
+      background: var(--color-accent-light);
+      font-weight: 600;
+    }
+
+    #module-nav li a .nav-check {
+      color: var(--color-success);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    #module-nav li a .nav-check.visible { opacity: 1; }
+
+    .sidebar-footer {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .sidebar-footer a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: var(--spacing-xs) 0;
+    }
+
+    .sidebar-footer a:hover { color: var(--color-accent); }
+
+    .sidebar-footer .reset-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      color: var(--color-text-secondary);
+      font-size: 0.75rem;
+      text-align: left;
+      padding: var(--spacing-xs) 0;
+      margin-top: var(--spacing-xs);
+    }
+
+    .sidebar-footer .reset-btn:hover { color: var(--color-accent); }
+
+    /* Mobile menu toggle */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: var(--spacing-md);
+      left: var(--spacing-md);
+      z-index: 20;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--color-text);
+    }
+
+    /* Main content */
+    #content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      max-width: calc(var(--max-content-width) + var(--spacing-2xl) * 2);
+      padding: var(--spacing-2xl);
+    }
+
+    /* Typography */
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--color-heading);
+      margin-top: var(--spacing-2xl);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--color-heading);
+      margin-top: var(--spacing-2xl);
+      margin-bottom: var(--spacing-md);
+    }
+
+    h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--color-heading);
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    h5 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-heading);
+      margin-top: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    p {
+      margin-bottom: var(--spacing-md);
+    }
+
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      transition: text-decoration-color 0.15s;
+    }
+
+    a:hover { text-decoration-color: var(--color-accent); }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: var(--color-code-bg);
+      padding: 0.1em 0.35em;
+      border-radius: var(--radius-sm);
+    }
+
+    pre {
+      background: var(--color-code-bg);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin-bottom: var(--spacing-md);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.85rem;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--color-accent);
+      padding: var(--spacing-sm) var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      background: var(--color-accent-light);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      color: var(--color-text);
+      font-size: 0.95rem;
+    }
+
+    blockquote p:last-child { margin-bottom: 0; }
+
+    ul, ol {
+      padding-left: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+    }
+
+    li {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    li > ul, li > ol {
+      margin-top: var(--spacing-xs);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: var(--spacing-xl) 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--spacing-md);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--color-table-header-bg);
+      font-weight: 600;
+      text-align: left;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    td {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: var(--color-table-stripe);
+    }
+
+    /* Module sections */
+    .module {
+      margin-bottom: var(--spacing-2xl);
+      padding-bottom: var(--spacing-xl);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .module:last-child {
+      border-bottom: none;
+    }
+
+    .module-time {
+      display: inline-block;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      background: var(--color-border-light);
+      padding: 0.15em 0.6em;
+      border-radius: 999px;
+      margin-left: var(--spacing-sm);
+      vertical-align: middle;
+      font-weight: 400;
+    }
+
+    /* Check yourself blocks */
+    .check-yourself {
+      background: var(--color-check-bg);
+      border: 1px solid var(--color-check-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .check-yourself h4 {
+      margin-top: 0;
+      font-size: 0.95rem;
+      color: var(--color-heading);
+    }
+
+    .check-yourself .qa-pair {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .check-yourself .qa-pair:last-child {
+      margin-bottom: 0;
+    }
+
+    .check-yourself .question {
+      font-weight: 600;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .check-yourself .answer {
+      display: none;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      margin-top: var(--spacing-sm);
+      border-left: 3px solid var(--color-success);
+    }
+
+    .check-yourself .answer.revealed {
+      display: block;
+    }
+
+    .reveal-btn {
+      background: none;
+      border: 1px solid var(--color-check-border);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-xs) var(--spacing-md);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      margin-top: var(--spacing-sm);
+      transition: background 0.15s;
+    }
+
+    .reveal-btn:hover {
+      background: var(--color-bg);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      #content {
+        margin-left: 0;
+        padding: var(--spacing-xl) var(--spacing-md);
+        padding-top: calc(var(--spacing-xl) + 3rem);
+      }
+    }
+
+    /* Print */
+    @media print {
+      #sidebar, .menu-toggle, .reveal-btn { display: none; }
+      #content { margin-left: 0; max-width: 100%; }
+      .check-yourself .answer { display: block; }
+      body { font-size: 11pt; }
+    }
+  </style>
+</head>
+<body>
+  <button class="menu-toggle" aria-label="Toggle navigation">Menu</button>
+
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <h1>Git Literacy</h1>
+      <p class="subtitle">For Product Managers</p>
+    </div>
+    <ul id="module-nav">
+      <li><a href="#module-1-your-work-lives-on-your-laptop-now-4-minutes"><span class="nav-check" data-section-id="module-1-your-work-lives-on-your-laptop-now-4-minutes">&#10003;</span>Module 1: Your Work Lives on Your Laptop Now</a></li>
+<li><a href="#module-2-but-wait-cant-claude-just-use-confluence-and-google-docs-directly-2-minutes"><span class="nav-check" data-section-id="module-2-but-wait-cant-claude-just-use-confluence-and-google-docs-directly-2-minutes">&#10003;</span>Module 2: But Wait — Can't Claude Just Use Confluence and Google Docs Directly?</a></li>
+<li><a href="#module-3-repositories-your-projects-home-2-minutes"><span class="nav-check" data-section-id="module-3-repositories-your-projects-home-2-minutes">&#10003;</span>Module 3: Repositories – Your Project's Home</a></li>
+<li><a href="#module-4-commits-deliberate-save-points-3-minutes"><span class="nav-check" data-section-id="module-4-commits-deliberate-save-points-3-minutes">&#10003;</span>Module 4: Commits – Deliberate Save Points</a></li>
+<li><a href="#module-5-branches-parallel-universes-for-safe-experimentation-3-minutes"><span class="nav-check" data-section-id="module-5-branches-parallel-universes-for-safe-experimentation-3-minutes">&#10003;</span>Module 5: Branches – Parallel Universes for Safe Experimentation</a></li>
+<li><a href="#module-6-pull-requests-proposing-your-changes-for-review-3-minutes"><span class="nav-check" data-section-id="module-6-pull-requests-proposing-your-changes-for-review-3-minutes">&#10003;</span>Module 6: Pull Requests – Proposing Your Changes for Review</a></li>
+<li><a href="#module-7-what-belongs-in-github-and-what-doesnt-2-minutes"><span class="nav-check" data-section-id="module-7-what-belongs-in-github-and-what-doesnt-2-minutes">&#10003;</span>Module 7: What Belongs in GitHub (and What Doesn't)</a></li>
+<li><a href="#module-8-working-across-multiple-repos-2-minutes"><span class="nav-check" data-section-id="module-8-working-across-multiple-repos-2-minutes">&#10003;</span>Module 8: Working Across Multiple Repos</a></li>
+<li><a href="#module-9-your-daily-workflow-and-troubleshooting-3-minutes"><span class="nav-check" data-section-id="module-9-your-daily-workflow-and-troubleshooting-3-minutes">&#10003;</span>Module 9: Your Daily Workflow and Troubleshooting</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="#quick-reference-card">Quick Reference</a>
+      <a href="#glossary">Glossary</a>
+      <a href="#appendix-a-how-these-concepts-map-to-what-you-already-know">Appendix A</a>
+      <a href="#appendix-b-why-were-doing-this">Appendix B</a>
+      <button class="reset-btn" id="reset-progress">Reset progress</button>
+    </div>
+  </nav>
+
+  <main id="content">
+    <h3 id="how-to-use-this-training">How to Use This Training</h3>
+<p>Read each module in order. Budget about 20 minutes. Each module follows the same pattern:</p>
+<ul>
+<li><strong>The concept</strong> — what it is, explained through something you already know</li>
+</ul>
+
+<ul>
+<li><strong>What you'd say to Claude Code</strong> — the natural-language prompt you'd actually type</li>
+</ul>
+
+<ul>
+<li><strong>What happens behind the curtain</strong> — what Claude Code does on your behalf</li>
+</ul>
+
+<ul>
+<li><strong>Check yourself</strong> — a quick question to confirm the concept landed</li>
+</ul>
+
+<p>No need to have VS Code open. This is a <em>reading</em> exercise that builds the mental model you'll use when you sit down to work.</p>
+<section class="module" id="module-1-your-work-lives-on-your-laptop-now-4-minutes">
+<h3>Module 1: Your Work Lives on Your Laptop Now (4 minutes)<span class="module-time">(4 minutes)</span></h3>
+<p>This is the biggest shift, so we're starting here.</p>
+<p>Almost everything you do right now lives in the cloud. Google Docs, Sheets, Slides, Confluence – they exist on servers and you access them through a browser. Multiple people edit the same document simultaneously and everyone sees each other's cursor in real time. Your laptop is just a window.</p>
+<p><strong>Code doesn't work that way.</strong></p>
+<p>When you work with Claude Code, your work lives in files <em>on your laptop</em>. Real files in real folders – like the old days of saving Word documents to your hard drive. This is called working <strong>locally</strong>. The cloud equivalent, where the team's shared official copy lives, is GitHub.com. That's the <strong>remote</strong>.</p>
+<p><strong>Google Drive model:</strong> One copy in the cloud. Everyone connects to it. Changes appear for everyone instantly.</p>
+<p><strong>Git model:</strong> Everyone has their own copy on their own machine. You work on yours privately and, when you're ready, <em>push</em> your changes to the shared copy on GitHub.com. Teammates <em>pull</em> changes down when they want to see what's new.</p>
+<p>The honest tradeoffs</p>
+<p>Git asks you to work differently, and it's worth naming that clearly:</p>
+<ul>
+<li><strong>No real-time co-editing.</strong> You can't watch someone's cursor move through code. Two people work on their own copies and reconcile later.</li>
+</ul>
+
+<ul>
+<li><strong>Sync is manual.</strong> Changes don't reach teammates until you push. Theirs don't reach you until you pull. Build the habit.</li>
+</ul>
+
+<ul>
+<li><strong>Your laptop matters.</strong> Uncommitted local changes exist only on your machine. (Claude Code will remind you to push – more on this in the commits module.)</li>
+</ul>
+
+<ul>
+<li><strong>More steps.</strong> Editing a Google Doc is: open, type, done. The Git workflow is: pull the latest, create a branch, make changes, commit, push, open a pull request. Claude Code handles most of these automatically, but understanding the rhythm helps.</li>
+</ul>
+
+<p>What you're gaining</p>
+<p>The gains are substantial – and they matter especially right now:</p>
+<ul>
+<li><strong>Every serious AI agent speaks Git natively.</strong> Claude Code, GitHub Copilot, Cursor, Windsurf – all of them are built around Git workflows. When your work lives in GitHub, these agents can see it and use it. A PRD in a repo isn't just a document anymore – it's something Claude Code can actively reference and act on. A research summary becomes context Claude can draw from. Acceptance criteria in a repo are something Claude can check its own work against.</li>
+</ul>
+
+<ul>
+<li><strong>Precision control over every contribution.</strong> Instead of paragraph-level tracked changes, Git records exact modifications each person (or agent) made, at the line level, with complete history. You can review what Claude Code did, approve it, or roll it back – at any granularity.</li>
+</ul>
+
+<ul>
+<li><strong>You get closer to the product itself.</strong> The code in GitHub <em>is</em> the product. Even if you're not writing code yourself, working in the same environment as your engineers means you're not reading about what was built – you're looking at it. The commit messages, the pull request discussions, the actual files.</li>
+</ul>
+
+<ul>
+<li><strong>Experimentation is cheap.</strong> Because everyone works on their own copy, you can try things, break things, and start over without affecting anyone else. In Google Docs, destructive experiments are nerve-wracking. In Git, they're routine – almost encouraged.</li>
+</ul>
+
+<ul>
+<li><strong>Everything you bring into GitHub becomes richer AI context.</strong> The more your repos contain – specs, copy strings, decisions, research, architecture notes – the more Claude Code has to work with. This is true whether Claude is helping you draft a spec, answer a question about the product, or prototype a feature.</li>
+</ul>
+
+<p><strong>The bottom line:</strong> You're trading effortless real-time editing for version control, safe parallelism, structured review, and a shared workspace with the most capable AI agents available. The extra steps are real, but Claude Code absorbs most of them – and what you get in return is genuine leverage, whether you're writing a spec, analyzing a product area, or occasionally asking Claude to prototype something.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: You make changes to code on your laptop using Claude Code and then close your laptop for the day. Can your teammate see those changes on GitHub.com?</p>
+<div class="answer"><p>Not unless you pushed them. Your changes are local until you explicitly share them.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: Why would anyone choose this model over Google Docs?</p>
+<div class="answer"><p>Because it gives you safe parallel work, precise version history, structured review — and because AI coding agents are built around Git, so it's the only way to fully collaborate with them.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-2-but-wait-cant-claude-just-use-confluence-and-google-docs-directly-2-minutes">
+<h3>Module 2: But Wait — Can't Claude Just Use Confluence and Google Docs Directly? (2 minutes)<span class="module-time">(2 minutes)</span></h3>
+<p>Fair question — and worth asking now, because it's going to occur to you.</p>
+<p>Claude Code can already pull error logs from Snowflake, read a Word Doc, grab OKRs from Slides, and query Jira — all through MCP (Model Context Protocol) and CLI integrations that connect AI agents to your existing systems of record. More are coming. So if Claude can reach everything you work with today, why do you need GitHub and local files at all?</p>
+<p>Because there's a difference between <em>inputs</em>, <em>workspace</em>, and <em>outputs</em>.</p>
+<p><strong>Inputs</strong> are the things Claude reads to understand your intent: the Snowflake error log, the feedback doc, the OKR deck, the Jira ticket. These live in your existing tools and Claude can reach them via integrations. You don't need to move them anywhere.</p>
+<p><strong>Workspace</strong> is where Claude actually <em>does the work</em> — drafting specs, updating acceptance criteria, organizing research, editing content files, and occasionally prototyping. This needs to be a shared space with shared rules: a place where every change is tracked, every version is preserved, and you can review and approve what happened before anything gets used. That place is your local repo, synced to GitHub. No cloud document tool is built for this. Confluence's version history is shallow and human-facing; it's not designed for an agent making many small, interconnected changes across a set of working files.</p>
+<p><strong>Outputs</strong> are what Claude produces once you've approved the work: a Jira ticket, a QBR slide deck, a Confluence page summarizing what shipped. Claude can write these back to your tools — again via MCP or CLI — once the underlying work is done and reviewed.</p>
+<p>The full picture looks like this:</p>
+<blockquote><p><strong>Claude reads</strong> your error logs from Snowflake, your feedback from the Google Doc, your priorities from the OKR deck → <strong>Claude works</strong> in the repo — drafting the spec, updating acceptance criteria, restructuring the roadmap file, making the change you described → <strong>You review</strong> the changes in a pull request before anything merges → <strong>Claude ships</strong> the results: files a Jira ticket, generates the QBR slides, updates the Confluence page</p></blockquote>
+<p>Git isn't replacing your tools. It's the <em>workbench</em> — the place where your inputs become tracked, reviewable work product, with a human in the loop at every meaningful step.</p>
+</section>
+<section class="module" id="module-3-repositories-your-projects-home-2-minutes">
+<h3>Module 3: Repositories – Your Project's Home (2 minutes)<span class="module-time">(2 minutes)</span></h3>
+<p>The concept</p>
+<p>A <strong>repository</strong> (usually just "repo") is a project folder that remembers everything. It contains all a project's files <em>plus</em> the complete history of every change ever made to them.</p>
+<p><strong>Google Drive analogy:</strong> A shared Drive folder for a project – subfolders, documents, spreadsheets. A repo is like that, but with a perfect memory of every version of every file. You can't accidentally "lose" something in a repo, because the history is always there.</p>
+<table>
+<thead><tr><th></th><th>Where it lives</th><th>How you interact with it</th></tr></thead>
+<tbody>
+<tr><td><strong>Remote repo</strong></td><td>GitHub.com (your Enterprise instance)</td><td>Browse in a web browser – the shared, official copy</td></tr>
+<tr><td><strong>Local repo</strong></td><td>Your laptop, inside a folder</td><td>Where Claude Code works – your VS Code project folder</td></tr>
+</tbody></table>
+
+<p>The first time you work on a project, you <strong>clone</strong> it – downloading the full repo (files + all history) from GitHub to your laptop. After that, push and pull keeps the two copies in sync.</p>
+<p>Where to find your team's repos</p>
+<ol>
+<li>Go to GitHub.com and sign in with SSO</li>
+</ol>
+
+<ol>
+<li>Your team's repos live under your organization – click the org name in the left sidebar</li>
+</ol>
+
+<ol>
+<li>Search by project name. Repos are named in lowercase with hyphens: <code>card-servicing-api</code>, <code>chat-experience-frontend</code></li>
+</ol>
+
+<h4 id="what-youd-say-to-claude-code">What you'd say to Claude Code</h4>
+<blockquote><p>"Clone the card-servicing-api repo so I can work on it locally"</p></blockquote>
+<h4 id="what-happens-behind-the-curtain">What happens behind the curtain</h4>
+<p>Claude Code runs <code>git clone <url></code>, downloading the entire repo to a folder on your laptop. VS Code opens that folder. You only do this once per repo.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: Someone says "check the repo." Where do you go?</p>
+<div class="answer"><p>GitHub.com, to look at the remote copy.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: Someone says "I cloned the repo." What did they do?</p>
+<div class="answer"><p>Downloaded a copy of the project from GitHub.com to their laptop so they can work on it locally.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-4-commits-deliberate-save-points-3-minutes">
+<h3>Module 4: Commits – Deliberate Save Points (3 minutes)<span class="module-time">(3 minutes)</span></h3>
+<p>A <strong>commit</strong> is a deliberate save point. It captures the state of every file in the repo at one moment, paired with a short description of what changed and why.</p>
+<p><strong>Google Drive analogy:</strong> Version history auto-saves constantly with timestamps. Commits are <em>manually named versions</em>. Instead of "March 14, 3:42 PM," you get "Add error message when user enters expired card."</p>
+<p><strong>Why deliberate saves?</strong> This connects directly to Module 1. Because Git doesn't auto-save to the cloud, <em>you</em> decide when a set of changes is worth recording. This sounds like extra friction, but it's actually a powerful form of storytelling. A commit history that reads like progress — "Add validation for card expiration," "Update error message copy," "Fix edge case for leap year dates" — is dramatically easier to debug and understand than "misc changes," "WIP," "fixed stuff."</p>
+<p><strong>Important:</strong> A commit saves to your <em>local</em> repo – not visible to anyone else until you <em>push</em>. Think of it as writing in a notebook you haven't shared yet. Commit often; push when you're ready to share.</p>
+<p>When you work with Claude Code, <em>you are the author of these commits</em>. Your name is on them. Claude Code will suggest commit messages – review them and edit to make sure they clearly describe what changed.</p>
+<h4 id="what-youd-say-to-claude-code">What you'd say to Claude Code</h4>
+<blockquote><p>"Commit what we have so far — we've finished the header and navigation translations"</p></blockquote>
+<p>Or more specifically:</p>
+<blockquote><p>"Commit with the message 'Add Spanish language support to welcome screen'"</p></blockquote>
+<h4 id="what-happens-behind-the-curtain">What happens behind the curtain</h4>
+<p>Claude Code does two things:</p>
+<ol>
+<li><strong>Stages the changes</strong> (<code>git add</code>) — selects which file changes to include</li>
+</ol>
+
+<ol>
+<li><strong>Creates the commit</strong> (<code>git commit -m "..."</code>) — records the save point with your message</li>
+</ol>
+
+<p>The commit exists locally. It reaches GitHub.com when you <em>push</em>.</p>
+<p>What a commit looks like on GitHub.com</p>
+<p>Once pushed, any commit on GitHub shows you:</p>
+<ul>
+<li><strong>The author</strong> (your name), <strong>date</strong>, and <strong>message</strong></li>
+</ul>
+
+<ul>
+<li><strong>A diff</strong> — line-by-line view of what was added (green) and removed (red)</li>
+</ul>
+
+<p>This diff is what engineers and reviewers use to understand your change. Worth clicking around on to get comfortable.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: You ask Claude Code to make a change and it does. Is that change saved to Git's history?</p>
+<div class="answer"><p>No. The files on your laptop are modified, but it's not a commit until you explicitly tell Claude Code to commit.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: After you commit, can your teammate see the change on GitHub.com?</p>
+<div class="answer"><p>Not yet — you also need to push.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-5-branches-parallel-universes-for-safe-experimentation-3-minutes">
+<h3>Module 5: Branches – Parallel Universes for Safe Experimentation (3 minutes)<span class="module-time">(3 minutes)</span></h3>
+<p>A <strong>branch</strong> is a parallel copy of the project where you make changes without affecting anyone else's work.</p>
+<p><strong>Google Drive analogy:</strong> You want to experiment with a different PRD structure but don't want to wreck the current version, so you "Make a copy" and work on that. A branch is exactly that – except it applies to the <em>entire project at once</em>, and has a built-in mechanism to merge your changes back when you're done.</p>
+<p><strong>The key branch:</strong> <code>main</code><strong>.</strong> Every repo has a primary branch called <code>main</code> — the official version. Nobody works directly on <code>main</code>. Instead:</p>
+<ol>
+<li>Create a new branch off <code>main</code> (your parallel universe)</li>
+</ol>
+
+<ol>
+<li>Make changes and commit on that branch</li>
+</ol>
+
+<ol>
+<li>When ready, propose merging your branch back into <code>main</code> via a pull request (next module)</li>
+</ol>
+
+<ol>
+<li>After review and approval, your branch merges in</li>
+</ol>
+
+<p><strong>Why not just work directly on</strong> <code>main</code><strong>?</strong> Same reason you wouldn't edit a live document while stakeholders are reading it mid-draft. Branches give you a private workspace. And because Git is local-first, your branch is doubly safe – it's on your machine, on your branch, until you push.</p>
+<p><strong>Branch naming:</strong> Short, descriptive, hyphenated: <code>add-spanish-translations</code>, <code>fix-expired-card-error</code>, <code>update-welcome-copy</code>. Claude Code will suggest names.</p>
+<h4 id="what-youd-say-to-claude-code">What you'd say to Claude Code</h4>
+<blockquote><p>"Create a new branch for the work we're about to do on Spanish translations"</p></blockquote>
+<blockquote><p>"Switch to the add-spanish-translations branch"</p></blockquote>
+<blockquote><p>"Pull the latest from main and create a new branch called update-faq-content"</p></blockquote>
+<h4 id="what-happens-behind-the-curtain">What happens behind the curtain</h4>
+<p><strong>Creating a branch:</strong> <code>git checkout -b add-spanish-translations</code> — creates a branch from your current position (usually <code>main</code>) and switches you to it. Commits now go only to <em>this branch</em>.</p>
+<p><strong>Switching branches:</strong> <code>git checkout <branch-name></code> — files in VS Code change to reflect that branch's state. Files might appear or disappear. That's normal, not data loss.</p>
+<p><strong>Pulling latest:</strong> <code>git pull origin main</code> — downloads new commits from GitHub before you start.</p>
+<p>How to see which branch you're on</p>
+<p>VS Code's <strong>bottom-left corner</strong> shows a branch icon and name. Click it to switch branches from the GUI.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: Your teammate says "I pushed to my branch." Does that mean their changes are on <code>main</code>?</p>
+<div class="answer"><p>No. They're on their branch on GitHub.com. They need a pull request to get those changes into <code>main</code>.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: You're on branch <code>fix-login-bug</code> and a file looks different than expected. Is something wrong?</p>
+<div class="answer"><p>Probably not — files reflect whichever branch you're on. Check if you need to switch branches.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-6-pull-requests-proposing-your-changes-for-review-3-minutes">
+<h3>Module 6: Pull Requests – Proposing Your Changes for Review (3 minutes)<span class="module-time">(3 minutes)</span></h3>
+<p>A <strong>pull request</strong> (PR) is a formal proposal: <em>"I've made changes on my branch. Here they are – please review and, if they look good, merge them into</em> <code>main</code><em>."</em></p>
+<p><strong>Google Drive analogy:</strong> Switching a doc to "Suggesting" mode and tagging reviewers. They see exactly what you changed, leave comments, request revisions, or approve. The difference: your changes don't touch the original until someone explicitly approves and merges.</p>
+<p><strong>The lifecycle:</strong></p>
+<ol>
+<li><strong>You create it.</strong> Push your branch, open a PR on GitHub.com. It includes a title, description, and full diff.</li>
+</ol>
+
+<ol>
+<li><strong>Reviewers examine it.</strong> They see every line added (green) and removed (red), comment on specific lines, and give a decision: Approve or Request Changes.</li>
+</ol>
+
+<ol>
+<li><strong>You revise if needed.</strong> Make more changes in VS Code, commit, push. The PR updates automatically.</li>
+</ol>
+
+<ol>
+<li><strong>Someone merges it.</strong> After approval, one click brings your changes into <code>main</code>.</li>
+</ol>
+
+<ol>
+<li><strong>The branch is deleted.</strong> Its work is done. The commits live on in <code>main</code>'s history.</li>
+</ol>
+
+<p><strong>PR description tip:</strong> Treat it like a cover letter. What changed? Why? Anything tricky for the reviewer? Link to the ticket.</p>
+<h4 id="what-youd-say-to-claude-code">What you'd say to Claude Code</h4>
+<blockquote><p>"Push my changes and create a pull request. Title it 'Add Spanish language support to welcome screen.' In the description, explain that this adds translated strings for the welcome flow across all five screens."</p></blockquote>
+<h4 id="what-happens-behind-the-curtain">What happens behind the curtain</h4>
+<ol>
+<li>Pushes your branch (<code>git push</code>)</li>
+</ol>
+
+<ol>
+<li>Creates the PR via GitHub CLI, targeting <code>main</code></li>
+</ol>
+
+<ol>
+<li>Returns the PR URL – click through to add reviewers and monitor feedback</li>
+</ol>
+
+<p>Where to manage your PR</p>
+<p><strong>"Pull requests"</strong> tab on your repo's GitHub page. Inside your PR:</p>
+<ul>
+<li><strong>"Conversation"</strong> — comments and review decisions</li>
+</ul>
+
+<ul>
+<li><strong>"Files changed"</strong> — the full diff (most important tab for reviewers)</li>
+</ul>
+
+<ul>
+<li>The green <strong>"Merge pull request"</strong> button (appears once approved)</li>
+</ul>
+
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: A reviewer comments asking you to change some wording. What do you do?</p>
+<div class="answer"><p>Go to VS Code, ask Claude Code to make the change, commit, push. The PR updates automatically.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: After merge, where do your changes live?</p>
+<div class="answer"><p>On <code>main</code> — the official version.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-7-what-belongs-in-github-and-what-doesnt-2-minutes">
+<h3>Module 7: What Belongs in GitHub (and What Doesn't) (2 minutes)<span class="module-time">(2 minutes)</span></h3>
+<p>GitHub thrives on <strong>text files</strong>: code, markdown, configuration, JSON. For these, it shows exactly what changed between versions, line by line. That's the diff view you see in pull requests – it's what makes code review possible.</p>
+<p>Binary files (Office documents, images) work differently. GitHub stores them, but can't show meaningful diffs.</p>
+<table>
+<thead><tr><th>File type</th><th>How GitHub handles it</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td>Code (.js, .py, .html)</td><td>Full diff, line-by-line review</td><td>GitHub's sweet spot</td></tr>
+<tr><td>Markdown (.md)</td><td>Renders beautifully, full diff</td><td>Great for READMEs, docs, PRDs Claude Code needs as context</td></tr>
+<tr><td>CSV, JSON, YAML</td><td>Text-based, diffable</td><td>Good for data and config</td></tr>
+<tr><td>Images (.png, .jpg, .svg)</td><td>Stored but not diffable</td><td>Include if the project needs them (UI assets, etc.)</td></tr>
+<tr><td>PowerPoint (.pptx)</td><td>Binary – no meaningful diff</td><td>Keep in Google Slides</td></tr>
+<tr><td>Excel (.xlsx)</td><td>Binary – no meaningful diff</td><td>Keep in Google Sheets; export to CSV if data belongs in Git</td></tr>
+<tr><td>Word (.docx)</td><td>Binary – no meaningful diff</td><td>Keep in Google Docs</td></tr>
+<tr><td>PDF</td><td>Stored, not diffable</td><td>Fine as a build artifact; not as a working document</td></tr>
+</tbody></table>
+
+<p>You don't need to move everything to GitHub. Use Drive, Confluence, and SharePoint for what they're good at. Bring things into GitHub when they <em>benefit from being near the code</em>:</p>
+<ul>
+<li><strong>PRDs or specs Claude Code should reference while building</strong> → markdown version in the repo</li>
+</ul>
+
+<ul>
+<li><strong>Content strings, copy, or configuration</strong> → text files that work natively in Git</li>
+</ul>
+
+<ul>
+<li><strong>Research or context documents that inform product decisions</strong> → markdown means Claude Code can read them</li>
+</ul>
+
+<ul>
+<li><strong>Stakeholder slide decks</strong> → stay in Google Slides</li>
+</ul>
+
+<p>The principle: <strong>if you want Claude Code to see it and use it as context, put it in the repo.</strong> If it's for human consumption only, use whatever tool creates it best.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: You have a PRD in Google Docs that you want Claude Code to reference while it builds a feature. What do you do?</p>
+<div class="answer"><p>Create a markdown version and put it in the repo. Claude Code can then read it as context.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: Your teammate asks you to commit an Excel spreadsheet to the repo. Is that a good idea?</p>
+<div class="answer"><p>Generally no — GitHub can't show meaningful diffs for Excel files. Keep it in Google Sheets and, if the data is needed in the repo, export it as CSV.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-8-working-across-multiple-repos-2-minutes">
+<h3>Module 8: Working Across Multiple Repos (2 minutes)<span class="module-time">(2 minutes)</span></h3>
+<p>Most products span several repos – a frontend, a backend API, shared configuration, maybe documentation. As a PM, you may work across more than one in a single session.</p>
+<p><strong>VS Code handles this naturally</strong> via <strong>Workspaces</strong>. Open multiple repos in the same VS Code window – each appears as a top-level folder in the Explorer sidebar. Multiple project folders, one window.</p>
+<p><strong>Claude Code can work across repos in your workspace.</strong> When you have multiple repos open, Claude Code reads files from any of them, understands their relationships, and makes coordinated changes:</p>
+<p>Claude Code traverses both repos, finds the relevant files, and makes changes in the right places.</p>
+<p>How to set up a multi-repo workspace</p>
+<ol>
+<li><strong>File → Add Folder to Workspace…</strong> — navigate to your first cloned repo</li>
+</ol>
+
+<ol>
+<li>Repeat for additional repos</li>
+</ol>
+
+<ol>
+<li><strong>File → Save Workspace As…</strong> — saves the arrangement so you can reopen it later</li>
+</ol>
+
+<p>Each repo can be on a different branch. The branch indicator in the bottom-left reflects whichever file you have open.</p>
+<h4 id="what-youd-say-to-claude-code">What you'd say to Claude Code</h4>
+<blockquote><p>"Look at the API spec in the card-servicing-api repo and make sure the frontend in chat-experience-frontend is handling all the error codes correctly"</p></blockquote>
+<blockquote><p>"Search across all the repos in my workspace for anywhere we reference the old card-status endpoint"</p></blockquote>
+<h4 id="what-happens-behind-the-curtain">What happens behind the curtain</h4>
+<p>Claude Code navigates the file system across all repos. Git operations (commits, pushes, branches) remain per-repo – a commit in one repo doesn't affect another. Changes across two repos produce separate commits in each.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: You have the API repo and the frontend repo open in the same VS Code workspace. You ask Claude Code to make a change that involves both. How many commits will that produce?</p>
+<div class="answer"><p>At least two — one in each repo. Git operations are per-repo.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: Can Claude Code read a file in a repo you haven't opened in your workspace?</p>
+<div class="answer"><p>No — it needs the repo to be cloned to your laptop and open in VS Code.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+<section class="module" id="module-9-your-daily-workflow-and-troubleshooting-3-minutes">
+<h3>Module 9: Your Daily Workflow and Troubleshooting (3 minutes)<span class="module-time">(3 minutes)</span></h3>
+<p>Putting it all together</p>
+<p>Here's the shape of a typical session. You don't need to memorize this – Claude Code guides you through it. But knowing the pattern means you always know where you are.</p>
+<p>Starting a session</p>
+<table>
+<thead><tr><th>If…</th><th>Say this to Claude Code</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td>First time on this project</td><td>"Clone the [repo-name] repo"</td><td>Downloads repo to your laptop</td></tr>
+<tr><td>Returning to a project</td><td>"Pull the latest changes from main"</td><td>Updates your local copy from GitHub</td></tr>
+<tr><td>Starting new work</td><td>"Create a new branch for [description]"</td><td>Creates a safe parallel workspace</td></tr>
+<tr><td>Continuing previous work</td><td>"Switch to the [branch-name] branch"</td><td>Returns to your in-progress work</td></tr>
+</tbody></table>
+
+<p>While you're working</p>
+<p>Ask Claude Code to draft, research, edit, analyze, and occasionally build things. Periodically save your progress:</p>
+<p>Think of commits as breadcrumbs. If something goes wrong, each commit is a point you can return to.</p>
+<p>When you're done (or ready for review)</p>
+<p>Then switch to GitHub.com to add reviewers, polish the description, and monitor feedback.</p>
+<p>When things feel wrong</p>
+<p><strong>"Claude Code says there are uncommitted changes blocking something."</strong></p>
+<p>Modified files haven't been committed yet. Say: <em>"Commit my current changes first"</em> — or <em>"Discard my uncommitted changes"</em> if you want to start clean.</p>
+<p><strong>"Claude Code mentions a merge conflict."</strong></p>
+<p>You and someone else changed the same lines, and Git can't automatically combine them. Say: <em>"Help me resolve this merge conflict – show me what the conflict is."</em> Claude Code will show both versions and help you decide. For complex conflicts, loop in an engineer.</p>
+<p><strong>"I'm on the wrong branch" or "I don't know where I am."</strong></p>
+<p>Check the bottom-left of VS Code. Say: <em>"Which branch am I on? Switch me to [correct branch]."</em></p>
+<p><strong>"Something is really wrong and I want to start over."</strong></p>
+<p>Say: <em>"Reset my branch back to the last commit"</em> or <em>"Abandon this branch and start fresh from main."</em> Git's history is always there. Starting over costs almost nothing.</p>
+<p><strong>"I need to explain this to an engineer."</strong></p>
+<p>Say: <em>"Summarize the current git status – what branch am I on, are there uncommitted changes, and is my branch up to date with main?"</em> Share Claude Code's response. Engineers will have everything they need to help.</p>
+<div class="check-yourself">
+<h4>Check yourself</h4>
+<div class="qa-pair">
+<p class="question">Q: You've been working for an hour. Claude Code has made changes to files. You haven't committed. Your laptop crashes. What happened to your work?</p>
+<div class="answer"><p>Gone. Uncommitted changes are just modified files on your laptop — they're not in Git's history. Commit regularly.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+<div class="qa-pair">
+<p class="question">Q: You open VS Code and the bottom-left says <code>main</code>. Should you start making changes?</p>
+<div class="answer"><p>No — create a feature branch first, so your work doesn't go directly on the official version.</p></div>
+<button class="reveal-btn">Show answer</button>
+</div>
+</div>
+
+</section>
+
+<h2 id="quick-reference-card">Quick Reference Card</h2>
+<table>
+<thead><tr><th>I want to…</th><th>Say this to Claude Code</th></tr></thead>
+<tbody>
+<tr><td>Start working on a new project</td><td>"Clone the [repo-name] repo"</td></tr>
+<tr><td>Get the latest version</td><td>"Pull the latest changes from main"</td></tr>
+<tr><td>Start new work</td><td>"Create a new branch for [what you're doing]"</td></tr>
+<tr><td>Save my progress</td><td>"Commit with the message '[what you did]'"</td></tr>
+<tr><td>Share my work for review</td><td>"Push my changes and create a pull request"</td></tr>
+<tr><td>See where I am</td><td>"What branch am I on? Any uncommitted changes?"</td></tr>
+<tr><td>Switch to different work</td><td>"Switch to the [branch-name] branch"</td></tr>
+<tr><td>Undo recent changes</td><td>"Reset to the last commit"</td></tr>
+<tr><td>Get help when confused</td><td>"Summarize the current git status and explain it"</td></tr>
+<tr><td>Work across multiple repos</td><td>"Look at [file] in the [other-repo] and…"</td></tr>
+</tbody></table>
+
+<h2 id="glossary">Glossary</h2>
+<p><strong>Local:</strong> Your laptop. Where you do your work. Files here are private until you push.</p>
+<p><strong>Remote:</strong> GitHub.com. The shared, cloud-hosted copy your team can see.</p>
+<p><strong>Repository (repo):</strong> A project folder that tracks the complete history of every file change. Lives both locally (your laptop) and remotely (GitHub.com).</p>
+<p><strong>Clone:</strong> Downloading a repo from GitHub.com to your laptop for the first time.</p>
+<p><strong>Commit:</strong> A deliberate save point – a snapshot of file changes with a description. Local until pushed.</p>
+<p><strong>Push:</strong> Uploading your local commits to GitHub.com. Local → remote.</p>
+<p><strong>Pull:</strong> Downloading the latest changes from GitHub.com to your laptop. Remote → local.</p>
+<p><strong>Branch:</strong> A parallel copy of the project. Every repo has a <code>main</code> branch (the official version). You create feature branches for your work.</p>
+<p><strong>Main:</strong> The primary branch – the official version. Don't work directly on it.</p>
+<p><strong>Pull Request (PR):</strong> A proposal to merge your branch into <code>main</code>. Includes a full diff and a review/approval workflow.</p>
+<p><strong>Diff:</strong> A line-by-line view of what changed. Green = added, red = removed. Only meaningful for text-based files.</p>
+<p><strong>Merge:</strong> Combining one branch's changes into another. Happens after a PR is approved.</p>
+<p><strong>Merge conflict:</strong> Two people changed the same lines. Git needs a human decision about which version to keep.</p>
+<p><strong>Workspace:</strong> A VS Code setup with multiple repos open at once. Each repo maintains its own branches and history independently.</p>
+<h2 id="appendix-a-how-these-concepts-map-to-what-you-already-know">Appendix A: How These Concepts Map to What You Already Know</h2>
+<table>
+<thead><tr><th>Concept</th><th>Google Drive equivalent</th><th>Git equivalent</th><th>Key difference</th></tr></thead>
+<tbody>
+<tr><td>Where work lives</td><td>In the cloud, always</td><td>On your laptop first, cloud when you push</td><td>Git is local-first</td></tr>
+<tr><td>Saving</td><td>Automatic, continuous</td><td>Manual – you choose when to commit</td><td>Deliberate saves tell a story</td></tr>
+<tr><td>Seeing others' changes</td><td>Instant, real-time</td><td>Manual – you pull when you want updates</td><td>More control, less magic</td></tr>
+<tr><td>Sharing your changes</td><td>Instant, as you type</td><td>Manual – you push when ready</td><td>You decide when to share</td></tr>
+<tr><td>The project folder</td><td>A shared Drive folder</td><td>Repository</td><td>Repo includes full history</td></tr>
+<tr><td>Experimenting safely</td><td>"Make a copy" of a doc</td><td>Create a branch</td><td>Branches are lightweight and built for merging back</td></tr>
+<tr><td>Suggesting changes</td><td>"Suggesting" mode in Docs</td><td>Working on a branch + opening a PR</td><td>More structured, with formal approval</td></tr>
+<tr><td>Reviewer approves</td><td>Accept suggestions in Docs</td><td>Approve and merge a PR</td><td>One step, then it's in</td></tr>
+<tr><td>Conflicting edits</td><td>Handled automatically in real time</td><td>Merge conflict – requires human resolution</td><td>The tradeoff of async parallel work</td></tr>
+<tr><td>File type support</td><td>Anything Google supports</td><td>Text files excel; binary files (pptx, xlsx) don't diff</td><td>Know what to put where</td></tr>
+</tbody></table>
+
+<h2 id="appendix-b-why-were-doing-this">Appendix B: Why We're Doing This</h2>
+<p>If Git is more steps than Google Docs, why bother?</p>
+<p>Because the tools that will define product management over the next several years – Claude Code, GitHub Copilot, Cursor, and whatever comes next – all think in Git. They read repos. They write commits. They open pull requests. They use the files in your repo as living context: evidence of what you're building, who it's for, and what your team has decided along the way.</p>
+<p>When you bring a product spec into a GitHub repo as a markdown file, it stops being a document someone reads once and sets aside – and becomes persistent context that Claude Code can actively draw from, session after session. When you write acceptance criteria in a GitHub issue, Claude can check its own work against your stated intent. When you ask Claude to draft a document, research a question, or analyze a product area, and the outputs live in Git, you can review exactly what it produced, approve it, and build on it next time. When you review a pull request, you're participating in a workflow where humans and AI agents collaborate through a shared system of record – with a human in the loop at every step that matters.</p>
+<p>None of this requires abandoning the tools you already use well. Google Docs is still the best place to draft a narrative. Confluence is still fine for team wikis. Miro is still great for whiteboarding. The goal is to bring the <em>right things</em> closer to the code – so that the AI agents working alongside your team have the richest possible context for doing their best work.</p>
+<p>That starts with understanding how the system works. Which, if you've read this far, you now do.</p>
+  </main>
+
+  <script>
+    (function() {
+      // Mobile menu toggle
+      var toggle = document.querySelector('.menu-toggle');
+      var sidebar = document.getElementById('sidebar');
+      if (toggle) {
+        toggle.addEventListener('click', function() {
+          sidebar.classList.toggle('open');
+        });
+        document.getElementById('content').addEventListener('click', function() {
+          sidebar.classList.remove('open');
+        });
+      }
+
+      // Click-to-reveal answers
+      document.querySelectorAll('.reveal-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var answer = btn.previousElementSibling;
+          if (answer && answer.classList.contains('answer')) {
+            answer.classList.toggle('revealed');
+            btn.textContent = answer.classList.contains('revealed') ? 'Hide answer' : 'Show answer';
+          }
+        });
+      });
+
+      // Progress tracking with localStorage
+      var STORAGE_KEY = 'git-literacy-progress';
+
+      function getProgress() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        } catch(e) {
+          return {};
+        }
+      }
+
+      function saveProgress(data) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch(e) {}
+      }
+
+      function updateNavChecks() {
+        var progress = getProgress();
+        document.querySelectorAll('#module-nav .nav-check').forEach(function(check) {
+          var id = check.getAttribute('data-section-id');
+          if (progress[id]) {
+            check.classList.add('visible');
+          } else {
+            check.classList.remove('visible');
+          }
+        });
+      }
+
+      // IntersectionObserver for sidebar highlighting and progress
+      var navLinks = document.querySelectorAll('#module-nav a');
+      var sections = [];
+      navLinks.forEach(function(link) {
+        var href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          var el = document.getElementById(href.slice(1));
+          if (el) sections.push({ id: href.slice(1), el: el, link: link });
+        }
+      });
+
+      if (sections.length > 0 && 'IntersectionObserver' in window) {
+        var currentActive = null;
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              // Mark as read
+              var progress = getProgress();
+              progress[entry.target.id] = true;
+              saveProgress(progress);
+              updateNavChecks();
+
+              // Highlight nav
+              if (currentActive) currentActive.classList.remove('active');
+              var match = sections.find(function(s) { return s.id === entry.target.id; });
+              if (match) {
+                match.link.classList.add('active');
+                currentActive = match.link;
+              }
+            }
+          });
+        }, { rootMargin: '-20% 0px -60% 0px' });
+
+        sections.forEach(function(s) { observer.observe(s.el); });
+      }
+
+      // Reset progress
+      var resetBtn = document.getElementById('reset-progress');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+          localStorage.removeItem(STORAGE_KEY);
+          updateNavChecks();
+        });
+      }
+
+      // Smooth scroll for nav links
+      document.querySelectorAll('#sidebar a[href^="#"]').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+          var target = document.getElementById(a.getAttribute('href').slice(1));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sidebar.classList.remove('open');
+          }
+        });
+      });
+
+      // Init
+      updateNavChecks();
+    })();
+  </script>
+</body>
+</html>
