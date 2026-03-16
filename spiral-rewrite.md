@@ -2,8 +2,6 @@
 
 ## Hybrid PRD / Lesson Plan
 
----
-
 ## Part 1: Product Requirements
 
 ### Problem Statement
@@ -70,8 +68,6 @@ After completing this training (\~20 minutes, self-paced), the learner can:
 
 Self-guided markdown document (convertible to internal wiki, Google Doc, or LMS module). Each section includes a mental model, a "What you'd say to Claude Code" prompt, a "What happens behind the curtain" explanation, and a quick comprehension check.
 
----
-
 ## Part 2: Lesson Plan
 
 ### How to Use This Training
@@ -87,8 +83,6 @@ Read each module in order. Budget about 20 minutes. Each module follows the same
 - **Check yourself** — a quick question to confirm the concept landed
 
 No need to have VS Code open. This is a *reading* exercise that builds the mental model you'll use when you sit down to work.
-
----
 
 ### Module 1: Your Work Lives on Your Laptop Now (4 minutes)
 
@@ -120,47 +114,39 @@ What you're gaining
 
 The gains are substantial – and they matter especially right now:
 
-- **Every serious AI coding agent speaks Git natively.** Claude Code, GitHub Copilot, Cursor, Windsurf – all of them are built around Git workflows. When your work lives in GitHub, these agents can see it and use it. A PRD in a repo isn't just a document anymore – it's something Claude Code can actively reference while building the feature you described.
+- **Every serious AI agent speaks Git natively.** Claude Code, GitHub Copilot, Cursor, Windsurf – all of them are built around Git workflows. When your work lives in GitHub, these agents can see it and use it. A PRD in a repo isn't just a document anymore – it's something Claude Code can actively reference and act on. A research summary becomes context Claude can draw from. Acceptance criteria in a repo are something Claude can check its own work against.
 
 - **Precision control over every contribution.** Instead of paragraph-level tracked changes, Git records exact modifications each person (or agent) made, at the line level, with complete history. You can review what Claude Code did, approve it, or roll it back – at any granularity.
 
-- **You get closer to the product itself.** The code in GitHub *is* the product. Working in the same environment as your engineers means you're not reading about what was built – you're looking at it directly. The commit messages, the pull request discussions, the actual files.
+- **You get closer to the product itself.** The code in GitHub *is* the product. Even if you're not writing code yourself, working in the same environment as your engineers means you're not reading about what was built – you're looking at it. The commit messages, the pull request discussions, the actual files.
 
 - **Experimentation is cheap.** Because everyone works on their own copy, you can try things, break things, and start over without affecting anyone else. In Google Docs, destructive experiments are nerve-wracking. In Git, they're routine – almost encouraged.
 
-- **Everything you bring into GitHub becomes richer AI context.** The more your repos contain – specs, copy strings, decisions, architecture notes – the more Claude Code has to work with when helping you build, understand, and test.
+- **Everything you bring into GitHub becomes richer AI context.** The more your repos contain – specs, copy strings, decisions, research, architecture notes – the more Claude Code has to work with. This is true whether Claude is helping you draft a spec, answer a question about the product, or prototype a feature.
 
-**The bottom line:** You're trading effortless real-time editing for version control, safe parallelism, structured review, and a shared workspace with the best AI coding tools available. The extra steps are real, but Claude Code absorbs most of them – and what you get in return is genuine leverage.
-
-> **Check yourself:** You make changes on your laptop with Claude Code, then close the lid for the day. Can your teammate see those changes on GitHub.com? *(No – they're local until you push.)* Why would anyone choose this over Google Docs? *(Safe parallel work, precise version history, structured review – and AI coding agents are built around Git, so it's the only way to fully collaborate with them.)*
-
----
+**The bottom line:** You're trading effortless real-time editing for version control, safe parallelism, structured review, and a shared workspace with the most capable AI agents available. The extra steps are real, but Claude Code absorbs most of them – and what you get in return is genuine leverage, whether you're writing a spec, analyzing a product area, or occasionally asking Claude to prototype something.
 
 ### Module 2: But Wait — Can't Claude Just Use Confluence and Google Docs Directly? (2 minutes)
 
 Fair question — and worth asking now, because it's going to occur to you.
 
-Claude Code can already pull error logs from Snowflake, read a Google Doc, grab OKRs from Slides, and query Jira — all through MCP (Model Context Protocol) and CLI integrations that connect AI agents to your existing systems of record. More are coming. So if Claude can reach everything you work with today, why do you need GitHub and local files at all?
+Claude Code can already pull error logs from Snowflake, read a Word Doc, grab OKRs from Slides, and query Jira — all through MCP (Model Context Protocol) and CLI integrations that connect AI agents to your existing systems of record. More are coming. So if Claude can reach everything you work with today, why do you need GitHub and local files at all?
 
 Because there's a difference between *inputs*, *workspace*, and *outputs*.
 
 **Inputs** are the things Claude reads to understand your intent: the Snowflake error log, the feedback doc, the OKR deck, the Jira ticket. These live in your existing tools and Claude can reach them via integrations. You don't need to move them anywhere.
 
-**Workspace** is where Claude actually *does the work* — writes code, edits files, runs tests. This needs to be a shared space with shared rules: a place where every change is tracked, every version is preserved, and you can review and approve what happened before it ships. That place is your local repo, synced to GitHub. No cloud document tool is built for this. Confluence's version history is shallow and human-facing; it's not designed for an agent making hundreds of small, interdependent code changes across a dozen files.
+**Workspace** is where Claude actually *does the work* — drafting specs, updating acceptance criteria, organizing research, editing content files, and occasionally prototyping. This needs to be a shared space with shared rules: a place where every change is tracked, every version is preserved, and you can review and approve what happened before anything gets used. That place is your local repo, synced to GitHub. No cloud document tool is built for this. Confluence's version history is shallow and human-facing; it's not designed for an agent making many small, interconnected changes across a set of working files.
 
-**Outputs** are what Claude produces once you've approved the work: a Jira ticket, a QBR slide deck, a Confluence page summarizing what shipped. Claude can write these back to your tools — again via MCP — once the underlying work is done and reviewed.
+**Outputs** are what Claude produces once you've approved the work: a Jira ticket, a QBR slide deck, a Confluence page summarizing what shipped. Claude can write these back to your tools — again via MCP or CLI — once the underlying work is done and reviewed.
 
-The full picture looks like this:
+The full picture looks like this: 
 
-→ **Claude reads** your error logs from Snowflake, your feedback from the Google Doc, your priorities from the OKR deck → **Claude works** in the repo — writing code, committing changes, building toward what you described → **You review** the changes in a pull request before anything merges → **Claude ships** the results: files a Jira ticket, generates the QBR slides, updates the Confluence page
+→ **Claude reads** your error logs from Snowflake, your feedback from the Google Doc, your priorities from the OKR deck → **Claude works** in the repo — drafting the spec, updating acceptance criteria, restructuring the roadmap file, making the change you described → **You review** the changes in a pull request before anything merges → **Claude ships** the results: files a Jira ticket, generates the QBR slides, updates the Confluence page
 
-Git isn't replacing your tools. It's the *workbench* — the place where inputs become working software, with a human in the loop at every meaningful step.
+Git isn't replacing your tools. It's the *workbench* — the place where your inputs become tracked, reviewable work product, with a human in the loop at every meaningful step.
 
-> **Check yourself:** Claude can already read your Confluence pages. Does that mean you don't need to put your PRD in GitHub? *(Not exactly — Confluence context helps Claude understand what to build. But the work it does in response still needs to live in Git, where you can review, approve, and roll back changes. For specs you want Claude to reference while writing code, a markdown copy in the repo is often the most direct path.)* What does Git give you that a cloud document API doesn't? *(Accountability: every change attributed, every version preserved, every modification reviewable before it merges.)*
-
----
-
-### Module 2: Repositories – Your Project's Home (2 minutes)
+### Module 3: Repositories – Your Project’s Home (2 minutes)
 
 The concept
 
@@ -185,17 +171,11 @@ Where to find your team's repos
 
 What you'd say to Claude Code
 
-> "Clone the card-servicing-api repo so I can work on it locally"
-
 What happens behind the curtain
 
 Claude Code runs `git clone <url>`, downloading the entire repo to a folder on your laptop. VS Code opens that folder. You only do this once per repo.
 
-> **Check yourself:** Someone says "check the repo." Where do you go? *(GitHub.com – the remote copy.)* Someone says "I cloned the repo." What did they do? *(Downloaded a copy from GitHub to their laptop.)*
-
----
-
-### Module 3: Commits – Deliberate Save Points (3 minutes)
+### Module 4: Commits – Deliberate Save Points (3 minutes)
 
 A **commit** is a deliberate save point. It captures the state of every file in the repo at one moment, paired with a short description of what changed and why.
 
@@ -208,10 +188,6 @@ A **commit** is a deliberate save point. It captures the state of every file in 
 When you work with Claude Code, *you are the author of these commits*. Your name is on them. Claude Code will suggest commit messages – review them and edit to make sure they clearly describe what changed.
 
 What you'd say to Claude Code
-
-> "Commit what we have so far – we've finished the header and navigation translations"
-
-> "Commit with the message 'Add Spanish language support to welcome screen'"
 
 What happens behind the curtain
 
@@ -233,11 +209,7 @@ Once pushed, any commit on GitHub shows you:
 
 This diff is what engineers and reviewers use to understand your change. Worth clicking around on to get comfortable.
 
-> **Check yourself:** Claude Code makes a change. Is it in Git's history? *(No – it's still just a modified file until you commit.)* After you commit, can teammates see it on GitHub? *(Not yet – push first.)*
-
----
-
-### Module 4: Branches – Parallel Universes for Safe Experimentation (3 minutes)
+### Module 5: Branches – Parallel Universes for Safe Experimentation (3 minutes)
 
 A **branch** is a parallel copy of the project where you make changes without affecting anyone else's work.
 
@@ -259,12 +231,6 @@ A **branch** is a parallel copy of the project where you make changes without af
 
 What you'd say to Claude Code
 
-> "Create a new branch for the Spanish translations work"
-
-> "Switch to the add-spanish-translations branch"
-
-> "Pull the latest from main and create a new branch called update-faq-content"
-
 What happens behind the curtain
 
 **Creating a branch:** `git checkout -b add-spanish-translations` — creates a branch from your current position (usually `main`) and switches you to it. Commits now go only to *this branch*.
@@ -277,11 +243,7 @@ How to see which branch you're on
 
 VS Code's **bottom-left corner** shows a branch icon and name. Click it to switch branches from the GUI.
 
-> **Check yourself:** Your teammate says "I pushed to my branch." Are their changes on `main`? *(No – they need a pull request for that.)* You're on `fix-login-bug` and a file looks different than expected. Something wrong? *(Probably not – files reflect whichever branch you're on.)*
-
----
-
-### Module 5: Pull Requests – Proposing Your Changes for Review (3 minutes)
+### Module 6: Pull Requests – Proposing Your Changes for Review (3 minutes)
 
 A **pull request** (PR) is a formal proposal: *"I've made changes on my branch. Here they are – please review and, if they look good, merge them into* `main`*."*
 
@@ -303,8 +265,6 @@ A **pull request** (PR) is a formal proposal: *"I've made changes on my branch. 
 
 What you'd say to Claude Code
 
-> "Push my changes and create a pull request. Title it 'Add Spanish language support to welcome screen.' Describe that this adds translated strings for the welcome flow across all five screens."
-
 What happens behind the curtain
 
 1. Pushes your branch (`git push`)
@@ -323,11 +283,7 @@ Where to manage your PR
 
 - The green **"Merge pull request"** button (appears once approved)
 
-> **Check yourself:** A reviewer asks you to change some wording. What do you do? *(Go to VS Code, ask Claude Code to make the change, commit, push. The PR updates automatically.)* After merge, where do your changes live? *(On* `main`*.)*
-
----
-
-### Module 6: What Belongs in GitHub (and What Doesn't) (2 minutes)
+### Module 7: What Belongs in GitHub (and What Doesn’t) (2 minutes)
 
 GitHub thrives on **text files**: code, markdown, configuration, JSON. For these, it shows exactly what changed between versions, line by line. That's the diff view you see in pull requests – it's what makes code review possible.
 
@@ -356,19 +312,13 @@ You don't need to move everything to GitHub. Use Drive, Confluence, and SharePoi
 
 The principle: **if you want Claude Code to see it and use it as context, put it in the repo.** If it's for human consumption only, use whatever tool creates it best.
 
-> **Check yourself:** You have a PRD in Google Docs that Claude Code should reference while building a feature. What do you do? *(Create a markdown version and put it in the repo.)* Your teammate asks you to commit an Excel file. Good idea? *(Generally no – keep it in Sheets, or export to CSV if the data belongs in Git.)*
-
----
-
-### Module 7: Working Across Multiple Repos (2 minutes)
+### Module 8: Working Across Multiple Repos (2 minutes)
 
 Most products span several repos – a frontend, a backend API, shared configuration, maybe documentation. As a PM, you may work across more than one in a single session.
 
 **VS Code handles this naturally** via **Workspaces**. Open multiple repos in the same VS Code window – each appears as a top-level folder in the Explorer sidebar. Multiple project folders, one window.
 
 **Claude Code can work across repos in your workspace.** When you have multiple repos open, Claude Code reads files from any of them, understands their relationships, and makes coordinated changes:
-
-> "The API repo defines an endpoint called /card-status. Find where the frontend repo calls it and update the error handling to match the new response format."
 
 Claude Code traverses both repos, finds the relevant files, and makes changes in the right places.
 
@@ -384,17 +334,9 @@ Each repo can be on a different branch. The branch indicator in the bottom-left 
 
 What you'd say to Claude Code
 
-> "Look at the API spec in card-servicing-api and make sure chat-experience-frontend handles all the error codes correctly"
-
-> "Search across all the repos in my workspace for anywhere we reference the old card-status endpoint"
-
 What happens behind the curtain
 
 Claude Code navigates the file system across all repos. Git operations (commits, pushes, branches) remain per-repo – a commit in one repo doesn't affect another. Changes across two repos produce separate commits in each.
-
-> **Check yourself:** API repo and frontend repo are open. You ask Claude Code to make a change in both. How many commits? *(At least two – one per repo.)* Can Claude Code read a file in a repo you haven't cloned and opened? *(No – it needs the repo on your laptop and open in VS Code.)*
-
----
 
 ### Module 8: Your Daily Workflow and Troubleshooting (3 minutes)
 
@@ -413,15 +355,11 @@ Starting a session
 
 While you're working
 
-Ask Claude Code to build, fix, and modify things. Periodically save your progress:
-
-> "Commit what we have so far – we finished the header translations"
+Ask Claude Code to draft, research, edit, analyze, and occasionally build things. Periodically save your progress:
 
 Think of commits as breadcrumbs. If something goes wrong, each commit is a point you can return to.
 
 When you're done (or ready for review)
-
-> "Push my changes and create a pull request for review"
 
 Then switch to GitHub.com to add reviewers, polish the description, and monitor feedback.
 
@@ -447,10 +385,6 @@ Say: *"Reset my branch back to the last commit"* or *"Abandon this branch and st
 
 Say: *"Summarize the current git status – what branch am I on, are there uncommitted changes, and is my branch up to date with main?"* Share Claude Code's response. Engineers will have everything they need to help.
 
-> **Check yourself:** You've worked for an hour, Claude Code has made changes, but you haven't committed. Your laptop crashes. What happened? *(Uncommitted changes are just modified files – not in Git's history. Commit regularly.)* You open VS Code and the bottom-left says `main`. Should you start making changes? *(Create a feature branch first.)*
-
----
-
 ## Quick Reference Card
 
 | I want to… | Say this to Claude Code |
@@ -465,8 +399,6 @@ Say: *"Summarize the current git status – what branch am I on, are there uncom
 | Undo recent changes | "Reset to the last commit" |
 | Get help when confused | "Summarize the current git status and explain it" |
 | Work across multiple repos | "Look at \[file\] in the \[other-repo\] and…" |
-
----
 
 ## Glossary
 
@@ -498,8 +430,6 @@ Say: *"Summarize the current git status – what branch am I on, are there uncom
 
 **Workspace:** A VS Code setup with multiple repos open at once. Each repo maintains its own branches and history independently.
 
----
-
 ## Appendix A: How These Concepts Map to What You Already Know
 
 | Concept | Google Drive equivalent | Git equivalent | Key difference |
@@ -515,15 +445,13 @@ Say: *"Summarize the current git status – what branch am I on, are there uncom
 | Conflicting edits | Handled automatically in real time | Merge conflict – requires human resolution | The tradeoff of async parallel work |
 | File type support | Anything Google supports | Text files excel; binary files (pptx, xlsx) don't diff | Know what to put where |
 
----
-
 ## Appendix B: Why We're Doing This
 
 If Git is more steps than Google Docs, why bother?
 
 Because the tools that will define product management over the next several years – Claude Code, GitHub Copilot, Cursor, and whatever comes next – all think in Git. They read repos. They write commits. They open pull requests. They use the files in your repo as living context: evidence of what you're building, who it's for, and what your team has decided along the way.
 
-When you bring a product spec into a GitHub repo as a markdown file, it stops being a document that an engineer reads and interprets – and becomes context that an AI agent can actively draw on while writing code. When you write acceptance criteria in a GitHub issue, Claude Code can check its own work against your stated intent. When you review a pull request, you're not just approving code – you're participating in a workflow where humans and AI agents collaborate through a shared system of record.
+When you bring a product spec into a GitHub repo as a markdown file, it stops being a document someone reads once and sets aside – and becomes persistent context that Claude Code can actively draw from, session after session. When you write acceptance criteria in a GitHub issue, Claude can check its own work against your stated intent. When you ask Claude to draft a document, research a question, or analyze a product area, and the outputs live in Git, you can review exactly what it produced, approve it, and build on it next time. When you review a pull request, you're participating in a workflow where humans and AI agents collaborate through a shared system of record – with a human in the loop at every step that matters.
 
 None of this requires abandoning the tools you already use well. Google Docs is still the best place to draft a narrative. Confluence is still fine for team wikis. Miro is still great for whiteboarding. The goal is to bring the *right things* closer to the code – so that the AI agents working alongside your team have the richest possible context for doing their best work.
 
